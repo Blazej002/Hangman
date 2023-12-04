@@ -38,40 +38,29 @@
             
             for (int i = 0; i < Width; i++)//Draw top
             {
-                Console.SetCursorPosition(aboutHalf, CurrentCol);
+                Console.SetCursorPosition(aboutHalf + i, CurrentCol);
                 Console.Write("=");
-                aboutHalf++;
-            }
+            }   
 
-            
-            CurrentCol++;//Next Column
-
-            Console.WriteLine("X");//The ting that hold the rope
-
-            //Draw Rope
-            for (int i = 0; i < Height / 3; i++)
-            {
-                
-                Console.SetCursorPosition(aboutHalf, CurrentCol + i);//Move the column by one each itteration
-                Console.WriteLine("|");
-
-                ColHead = CurrentCol + i; //Saving data for when drawing the man --
-                HorHead = aboutHalf;      // -- Since rope lenght is dynamic its good idea to store those values
-            }
-
-
-            aboutHalf = (Console.BufferWidth / 2) -
-                        5; //Reseting the Horizontal variabel, probably could do it a diffrent or better way.
-
+            aboutHalf = (Console.BufferWidth / 2) - 5; //Reseting the Horizontal variabel, probably could do it a diffrent or better way.
 
             CurrentCol = CurrentCopy + 1; // start point + 1 To start drawing the beam holding the whole thing.
 
             for (int i = 0; i < Height; i++) //Draw the beam
             {
                 Console.SetCursorPosition(aboutHalf, CurrentCol);
-                Console.WriteLine("H");
+                Console.Write("H");
 
+                //though i could just add the current col + height
+                if (i < 3)
+                {
+                    Console.SetCursorPosition(aboutHalf + Width -1, CurrentCol);
+                    Console.WriteLine("|");
+                    ColHead = CurrentCol + 1 ;        //Saving data for when drawing the man --
+                    HorHead = aboutHalf + Width - 1; // -- Since rope lenght is dynamic its good idea to store those values
+                }
                 CurrentCol++; //using ++ here instead of on the setCoursor method because i need the positon to be saved to draw the base.
+
             }
 
             // drawing the base
@@ -104,3 +93,4 @@
         }
     }
 }
+

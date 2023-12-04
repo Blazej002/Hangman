@@ -1,72 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hangman
+﻿namespace Hangman
 {
     internal class Man
     {
         public int wrongs { get; private set; }
+        public bool Complete { get; private set; }
 
-        public Man(int x)
+        public Man(int x = 0)
         {
             wrongs = x;
+            Complete = false;
         }
 
-        public void CheckHowMany(int VerStart, int HorStart)
+        public void CheckHowMany(int HorStart, int VerStart)
         {
-            Console.SetCursorPosition(HorStart,VerStart);
-            if (wrongs >= 1) DrawHead(VerStart, HorStart);
-            if (wrongs >= 2) DrawThorso(VerStart, HorStart);
-            if (wrongs >= 3) DrawLeftArm(VerStart, HorStart);
-            if (wrongs >= 4) DrawRightArm(VerStart, HorStart);
-            if (wrongs >= 5) DrawRightLeg(VerStart, HorStart);
+
+
+            Console.SetCursorPosition(HorStart, VerStart);
+            //Head
+            if (wrongs >= 1) DrawHead(HorStart, VerStart);
+            //Thorso
+            if (wrongs >= 2) DrawThorso(HorStart, VerStart);
+            //Left arm
+            if (wrongs >= 3) DrawLeftArm(HorStart, VerStart);
+            //and so on
+            if (wrongs >= 4) DrawRightArm(HorStart, VerStart);
+
+            if (wrongs >= 5) DrawRightLeg(HorStart, VerStart);
+
             if (wrongs == 6)
             {
-                DrawLeftLeg(VerStart, HorStart);
-                Console.ReadKey();
-                Console.Clear();
-                Console.WriteLine("Game Over");
-                Console.ReadKey();
-                Environment.Exit(0);
+                DrawLeftLeg(HorStart, VerStart);
+                Complete = true;
             }
         }
 
-        private void DrawHead(int VerStart, int HorStart)
+        //   O             H0,V0 
+        //  /|\   H-1,V+1  H0,V+1  H+1,V+1
+        //  / \   H-1,V+2          H+1,V+2   
+
+        private void DrawHead(int HorStart, int VerStart)
         {
             Console.SetCursorPosition(HorStart, VerStart);
             Console.WriteLine("O");
         }
 
-        private void DrawThorso(int VerStart, int HorStart)
+        private void DrawThorso(int HorStart, int VerStart)
         {
             Console.SetCursorPosition(HorStart, VerStart + 1);
             Console.Write("|");
         }
 
-        private void DrawRightArm(int VerStart, int HorStart)
+        private void DrawRightArm(int HorStart, int VerStart)
         {
             Console.SetCursorPosition(HorStart + 1, VerStart + 1);
             Console.WriteLine("\\");
         }
 
-        private void DrawLeftArm(int VerStart, int HorStart)
+        private void DrawLeftArm(int HorStart, int VerStart)
         {
             Console.SetCursorPosition(HorStart - 1, VerStart + 1);
             Console.WriteLine("/");
         }
 
 
-        private void DrawRightLeg(int VerStart, int HorStart)
+        private void DrawRightLeg(int HorStart, int VerStart)
         {
             Console.SetCursorPosition(HorStart + 1, VerStart + 2);
             Console.WriteLine("\\");
         }
 
-        private void DrawLeftLeg(int VerStart, int HorStart)
+        private void DrawLeftLeg(int HorStart, int VerStart)
         {
             Console.SetCursorPosition(HorStart - 1, VerStart + 2);
             Console.WriteLine("/");
@@ -76,6 +79,16 @@ namespace Hangman
         public void WrongAnswer()
         {
             wrongs++;
+        }
+
+        public int HowManyWrong()
+        {
+            return wrongs;
+        }
+
+        public bool IsItComplete()
+        {
+            return Complete;
         }
     }
 }

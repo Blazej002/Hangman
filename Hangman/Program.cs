@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Reflection;
 
 namespace Hangman
 {
@@ -6,73 +6,51 @@ namespace Hangman
     {
         static void Main(string[] args)
         {
-            string word = "Blazej";
+            var list = new WordList();
+            var word = list.GetRandomWord();
+
             var answer = word.ToUpper();
-            var guesses = new char[word.Length];
+            
 
 
-            for (int i = 0; i < guesses.Length; i++)
-            {
-                guesses[i] = '_';
-            }
 
             int aboutHalf = (Console.BufferWidth / 2) - 5;
 
-
-            bool checkIfCorrect = true;
-            int wrongs = 0;
-            var game = new Hangman(10, 7, 7);
+            var linch = new Hangman(10, 8, 7);
             var man = new Man(0);
-
+            //var game = new Game(answer);
+            var game = new Game(answer);
 
             while (true)
             {
-                game.DrawHangman();
+                //Draws Linch
+                linch.DrawHangman();
+                //Finds the postion for where to start drawing the stickman
+                var currentCol = linch.ReturnCurrentCol();
 
-                var currentCol = game.ReturnCurrentCol();
-
-                if (!checkIfCorrect)
-                    man.WrongAnswer();
-                man.CheckHowMany(game.ReturnColForHead(), game.ReturnHorForHead());
-
-
+                // It inverted here, im not sure why, ill look at it later
+                man.CheckHowMany(linch.ReturnHorForHead(), linch.ReturnColForHead());//Draws stickman
 
                 //Draw a visual representasjon of guesses 
                 currentCol += 2;
                 Console.SetCursorPosition(aboutHalf, currentCol);
-                for (int i = 0; i < answer.Length; i++)
-                {
-                    Console.Write(guesses[i] + " ");
-                }
-
-                Console.WriteLine();
-                currentCol += 2;
-                Console.SetCursorPosition(aboutHalf, currentCol);
-
+                game.DrawGuesses();
 
                 //player guess
-                var guess = char.Parse(Console.ReadLine());
-
+                currentCol += 2;
+                Console.SetCursorPosition(aboutHalf, currentCol);
+                var guess = game.Ask();
+                
                 //Check if correct
-                var a = char.ToUpper(guess);
-                char search = Convert.ToChar(a);
-                checkIfCorrect = false;
-
-                for (int i = 0; i < word.Length; i++)
-                {
-                    if (answer[i] == search)
-                    {
-                        guesses[i] = search;
-                        checkIfCorrect = true;
-                    }
-                }
+                var correctGuess = game.CheckIfCorGuess(guess);
+                game.WinLose(man.Complete,answer);
+                if (!correctGuess)
+                    man.WrongAnswer();
 
                 Console.Clear();
             }
         }
 
-        public void DrawHangman()
-        {
-        }
+
     }
 }
