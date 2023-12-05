@@ -4,17 +4,19 @@ namespace Hangman
 {
     internal class Game
     {
-        public char[] guesses;
+        public char[] Guesses;
         private string _answer;
+        public List<char> Wrongs;
 
         public Game(string answer)
         {
             // init
             _answer = answer;
-            guesses = new char[_answer.Length];
-            for (int i = 0; i < guesses.Length; i++)
+            Guesses = new char[_answer.Length];
+            Wrongs = new List<char>();
+            for (int i = 0; i < Guesses.Length; i++)
             {
-                guesses[i] = '_';
+                Guesses[i] = '_';
             }
         }
 
@@ -22,7 +24,7 @@ namespace Hangman
         {
             //Checks win and lose conditions
             _answer = _answer.ToUpper();
-            string guessedWord = new string(guesses).ToUpper();
+            string guessedWord = new string(Guesses).ToUpper();
 
             if (complete)
             {
@@ -40,21 +42,29 @@ namespace Hangman
             }
         }
 
+        public void DrawWrongs()
+        {
+            foreach (var wrong in Wrongs)
+            {
+                Console.Write(wrong + " ");
+            }
+
+            Console.WriteLine();
+        }
+
 
         public char Ask()
         {
-
             // User input
             while (true)
             {
-
                 char userinp;
-                //  cheking if char / userinput = console.readline()
+                //cheking if its a char / userinput = console.readline()
                 if (char.TryParse(Console.ReadLine(), out userinp))
                 {
                     // prolly a better way to do it.
                     // Whats happening here is char being thrown around just to make it uppercase
-                    //rest of the program checks only in upper
+                    //rest of the program works by checking only uppercase letters
                     var x = userinp.ToString();
                     var y = x.ToUpper();
                     var z = char.Parse(y);
@@ -69,9 +79,9 @@ namespace Hangman
 
         public void DrawGuesses()
         {
-            for (int i = 0; i < guesses.Length; i++)
+            for (int i = 0; i < Guesses.Length; i++)
             {
-                Console.Write(guesses[i] + " ");
+                Console.Write(Guesses[i] + " ");
             }
 
             Console.WriteLine();
@@ -82,15 +92,28 @@ namespace Hangman
         {
             //Checks if userinp/search is inside the answer
             bool correct = false;
-            for (int i = 0; i < guesses.Length; i++)
+            for (int i = 0; i < Guesses.Length; i++)
             {
                 if (_answer[i] == search)
                 {
-                    guesses[i] = search;
+                    Guesses[i] = search;
                     // I tried return true here but it would only save the first mention of search
                     // But what if there are 2 "D" or 5 "A", it would stop at the first.
                     correct = true;
                 }
+
+                foreach (var wrong in Wrongs)
+                {
+                    if (wrong == search)
+                    {
+                        correct = true;
+                    }
+                }
+            }
+
+            if (!correct)
+            {
+                Wrongs.Add(search);
             }
 
             bool ans = correct ? true : false;

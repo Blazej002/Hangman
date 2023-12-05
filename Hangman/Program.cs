@@ -23,6 +23,8 @@ namespace Hangman
 
             while (true)
             {
+                Console.SetCursorPosition(aboutHalf, 2);
+                game.DrawWrongs();
                 //Draws Linch
                 linch.DrawHangman();
                 //Finds the postion for where to start drawing the stickman
